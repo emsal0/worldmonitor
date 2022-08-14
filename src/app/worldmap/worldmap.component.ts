@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, SimpleChanges, OnInit, OnChanges, Input } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { CountryComponent } from '../country/country.component';
 import { HttpClient } from '@angular/common/http';
 
+import { parse as svgParse } from 'svg-parser';
 
 @Component({
   selector: 'app-worldmap',
@@ -10,22 +12,22 @@ import { HttpClient } from '@angular/common/http';
 })
 export class WorldmapComponent implements OnInit {
 
-  svg:SafeHtml;
+  @Input() svg:SafeHtml = '';
+  country_cursor:string = '';
+  countries:Array<CountryComponent> = [];
+  parser:any;
 
   constructor(
     private sanitizer: DomSanitizer,
     private httpClient: HttpClient,
   ) { 
-
-    this.svg='<svg></svg>';
   }
 
   ngOnInit(): void {
-    this.httpClient.get('assets/worldmap.svg', { responseType : 'text' })
-      .subscribe(value => {
-        console.log("asdf");
-        this.svg = this.sanitizer.bypassSecurityTrustHtml(value);
-      });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    const svgString = changes['svg'].currentValue['changingThisBreaksApplicationSecurity'];
+    console.log(svgParse(svgString).children[0]);
+  }
 }

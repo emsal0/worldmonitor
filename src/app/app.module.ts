@@ -4,17 +4,19 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { WorldmapComponent } from './worldmap/worldmap.component';
+import { CountryComponent } from './country/country.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    WorldmapComponent
+    WorldmapComponent,
+    CountryComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule
   ],
   providers: [],
-  bootstrap: [WorldmapComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
