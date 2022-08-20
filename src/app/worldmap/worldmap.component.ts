@@ -21,7 +21,7 @@ export class WorldmapComponent implements OnInit {
 
   @Input() svg: SafeHtml = '';
   country_cursor: string = '';
-  countries: Array<CountryComponent> = [];
+  countries: Array<any> = [];
   parser: HtmlParser = new HtmlParser({});
 
   constructor(
@@ -39,20 +39,17 @@ export class WorldmapComponent implements OnInit {
     let svgHast = fromWebparser(svgWebParse.rootNodes).children[1];
     
     let oceanData = hSelect('.oceanxx', svgHast);
-    console.log(oceanData);
     let countryData = hSelectAll(
       'svg > path:has(title):not(.oceanxx),' +
         'svg > g:has(title):not(.oceanxx)',
       svgHast
     );
 
-    //console.log(countryData);
-    //for (let countryElt of countryData) {
-      //console.log(toHtml(countryElt));
-    //}
-    //svgHast.children = [oceanData];
+    console.log(countryData);
+    svgHast.children = [oceanData];
     //console.log(toHtml(svgHast));
-    //this.svg = this.sanitizer.bypassSecurityTrustHtml(toHtml(svgHast));
+    this.countries = countryData;
+    this.svg = this.sanitizer.bypassSecurityTrustHtml(toHtml(svgHast));
   }
 
   clickCountry() {
