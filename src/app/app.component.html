@@ -1,7 +1,5 @@
 <h2 id="worldmap-title"> World Map </h2>
 <div id="main-container">
-  <app-worldmap [svg]="svg"></app-worldmap>
-  <div id="worldmap-news-panel">
-      <h3>Headlines for: {{country_cursor}}</h3>
-  </div>
+  <app-worldmap [svg]="svg" (broadcastCountryInfo)="onCountryInfo($event)"></app-worldmap>
+  <app-newspanel [country_cursor]="country_cursor"></app-newspanel>
 </div>

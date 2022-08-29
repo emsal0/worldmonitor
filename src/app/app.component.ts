@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { WorldmapComponent } from './worldmap/worldmap.component';
+import { NewspanelComponent } from './newspanel/newspanel.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 
@@ -12,15 +13,13 @@ export class AppComponent {
   title = 'worldmonitor';
 
   svg:SafeHtml;
-  country_cursor:string;
   parser:any;
+  country_cursor: string = 'UNIMPLEMENTED';
 
   constructor(
     private sanitizer: DomSanitizer,
     private httpClient: HttpClient,
   ) { 
-
-    this.country_cursor = "UNIMPLEMENTED";
     this.svg='<svg></svg>';
   }
 
@@ -29,5 +28,9 @@ export class AppComponent {
       .subscribe(value => {
         this.svg = this.sanitizer.bypassSecurityTrustHtml(value);
       });
+  }
+  
+  onCountryInfo(event: {id: string, title: string}) {
+    this.country_cursor = event.title;
   }
 }

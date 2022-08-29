@@ -3,6 +3,8 @@ import { Component, Input, OnInit,
 import { Output, EventEmitter } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
+import { matches as hMatches, select as hSelect,
+  selectAll as hSelectAll } from 'hast-util-select';
 import { toHtml } from 'hast-util-to-html'
 
 @Component({
@@ -13,28 +15,31 @@ import { toHtml } from 'hast-util-to-html'
 export class CountryComponent implements OnInit {
 
   countryId: string = '';
+  countryTitle: string = '';
   @Input() countryEltJson: any;
 
   innerSvg: SafeHtml = '';
-  @Output() broadcastId = new EventEmitter<string>;
+  @Output() broadcastId = new EventEmitter<{id: string, title: string}>;
 
   constructor(
     private sanitizer: DomSanitizer,
   ) { }
 
   clickCountry() {
-    console.log(this.countryEltJson.properties.id + " clicked!");
-    this.broadcastId.emit(this.countryId);
+    this.broadcastId.emit({id: this.countryId, title: this.countryTitle});
   }
 
   ngOnInit(): void {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const countryEltHast = changes['countryEltJson']
-      .currentValue;
-    this.innerSvg = this.sanitizer.bypassSecurityTrustHtml(toHtml(countryEltHast));
-    //console.log(this.innerSvg);
+    this.innerSvg = this.sanitizer.bypassSecurityTrustHtml(
+      toHtml(changes['countryEltJson'].currentValue));
+    this.countryId = this.countryEltJson.properties.id
+    let titleTag = hSelect('title', this.countryEltJson);
+    if (titleTag != null) {
+      this.countryTitle = (titleTag.children[0] as HTMLInputElement).value;
+    }
   }
 
 }
