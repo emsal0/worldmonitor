@@ -54,6 +54,17 @@ export class WorldmapComponent implements OnInit {
     svgHast.children = [oceanData];
     this.countries = countryData;
     this.svg = this.sanitizer.bypassSecurityTrustHtml(toHtml(svgHast));
+
+    /* TEMP */ 
+    //console.log(this.countries.map(country => {
+    //    let countryId = country.properties.id
+    //    let titleTag = hSelect('title', country);
+    //    let countryTitle = "NONE";
+    //    if (titleTag != null) {
+    //      countryTitle = (titleTag.children[0] as HTMLInputElement).value;
+    //    }
+    //    return { id: countryId, title: countryTitle };
+    //}));
   }
 
   clickCountry() {
