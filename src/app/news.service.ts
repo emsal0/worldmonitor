@@ -1,18 +1,23 @@
 import { Injectable } from '@angular/core';
-import { request } from 'https';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NewsService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   async getArticles(feed: string) {
-    request(feed, {}, (res) => { 
-        res.on('data', (d) => { 
-            console.log(d); 
-        });
+    let news_observable = this.http.get(feed);
+    news_observable.subscribe({
+      next(x) {
+        console.log(x);
+      },
+
+      error(err) {
+        console.error('error occurred: ' + JSON.stringify(err));
+      }
     });
   }
 }
