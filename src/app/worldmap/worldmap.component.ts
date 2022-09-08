@@ -69,12 +69,19 @@ export class WorldmapComponent implements OnInit, OnChanges {
   onWheel(event: any) {
     event.preventDefault()
     if (event.ctrlKey) {
-      let dir_x = Math.sign(event.clientX - this.viewBoxCoords[0]);
-      let dir_y = Math.sign(event.clientY - this.viewBoxCoords[1]);
-      this.viewBoxCoords[0] -= dir_x * -Math.abs(event.deltaY);
-      this.viewBoxCoords[1] -= dir_y * -Math.abs(event.deltaY);
-      this.viewBoxCoords[2] += event.deltaY * this.ratio;
-      this.viewBoxCoords[3] += event.deltaY;
+      if(this.viewBoxCoords[3] + event.deltaY > 100) {
+          console.log("Mouse Event:");
+          console.log("event data: ");
+          console.log(event);
+          console.log("viewbox data: " + JSON.stringify(this.viewBoxCoords));
+          let xdiff = event.clientX - this.viewBoxCoords[0]
+          let dir_x = Math.sign(xdiff);
+          let dir_y = Math.sign(event.clientY - this.viewBoxCoords[1]);
+          this.viewBoxCoords[0] += dir_x * Math.abs(event.deltaY) * this.ratio;
+          this.viewBoxCoords[1] += dir_y * Math.abs(event.deltaY);
+          this.viewBoxCoords[2] += event.deltaY * this.ratio;
+          this.viewBoxCoords[3] += event.deltaY;
+      }
     }
   }
 
