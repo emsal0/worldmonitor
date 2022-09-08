@@ -1,11 +1,8 @@
 import { Component, SimpleChanges, ViewEncapsulation,
   OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { CountryComponent } from '../country/country.component';
-import { HttpClient } from '@angular/common/http';
 
-import { matches as hMatches, select as hSelect,
-  selectAll as hSelectAll } from 'hast-util-select';
+import { select as hSelect, selectAll as hSelectAll } from 'hast-util-select';
 import { HtmlParser } from '@starptech/webparser';
 import { toHtml } from 'hast-util-to-html'
 
@@ -17,13 +14,16 @@ const fromWebparser = require('@starptech/hast-util-from-webparser');
   styleUrls: ['./worldmap.component.less'],
   encapsulation: ViewEncapsulation.None,
 })
-export class WorldmapComponent implements OnInit {
+export class WorldmapComponent implements OnInit, OnChanges {
 
   @Input() svg: SafeHtml = '';
   @Output() broadcastCountryInfo = new EventEmitter<{id: string, title: string}>;
   country_cursor: string = '';
   countries: Array<any> = [];
   parser: HtmlParser = new HtmlParser({});
+
+  viewBoxCoords: Array<number> = [0, 0, 2754, 1398]
+  ratio: number = 2754 / 1398;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -65,6 +65,17 @@ export class WorldmapComponent implements OnInit {
     //    }
     //    return { id: countryId, title: countryTitle };
     //}));
+  }
+  onWheel(event: any) {
+    event.preventDefault()
+    if (event.ctrlKey) {
+      let dir_x = Math.sign(event.clientX - this.viewBoxCoords[0]);
+      let dir_y = Math.sign(event.clientY - this.viewBoxCoords[1]);
+      this.viewBoxCoords[0] -= dir_x * -Math.abs(event.deltaY);
+      this.viewBoxCoords[1] -= dir_y * -Math.abs(event.deltaY);
+      this.viewBoxCoords[2] += event.deltaY * this.ratio;
+      this.viewBoxCoords[3] += event.deltaY;
+    }
   }
 
   clickCountry() {

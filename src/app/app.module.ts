@@ -19,6 +19,6 @@ import { NewspanelComponent } from './newspanel/newspanel.component';
     HttpClientModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }
