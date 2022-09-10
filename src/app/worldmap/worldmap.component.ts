@@ -70,7 +70,8 @@ export class WorldmapComponent implements OnInit, OnChanges {
   onWheel(event: any) {
     event.preventDefault()
     if (event.ctrlKey) {
-      if(this.viewBoxCoords[3] + event.deltaY > 100) {
+      if(this.viewBoxCoords[3] + event.deltaY > 100 && 
+         this.viewBoxCoords[3] + event.deltaY < 2000) {
           console.log("Mouse Event:");
           console.log("event data: ");
           console.log(event);
@@ -80,8 +81,8 @@ export class WorldmapComponent implements OnInit, OnChanges {
           let midHeight = elt.offsetHeight / 2;
           let xdiff = event.clientX - midWidth;
           let ydiff = event.clientY - midHeight;
-          let dir_x = Math.abs(xdiff) >= midWidth / 3 ? Math.sign(xdiff) : Math.sign(xdiff)/2;
-          let dir_y = Math.abs(ydiff) >= midHeight / 3 ? Math.sign(ydiff) : Math.sign(ydiff)/2;
+          let dir_x = Math.abs(xdiff) >= midWidth / 2 ? Math.sign(xdiff) : Math.sign(xdiff)/2;
+          let dir_y = Math.abs(ydiff) >= midHeight / 2 ? Math.sign(ydiff) : Math.sign(ydiff)/2;
           this.viewBoxCoords[0] += dir_x * Math.abs(event.deltaY) * this.ratio;
           this.viewBoxCoords[1] += dir_y * Math.abs(event.deltaY);
           this.viewBoxCoords[2] += event.deltaY * this.ratio;
