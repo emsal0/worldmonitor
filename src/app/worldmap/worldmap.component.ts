@@ -1,5 +1,5 @@
 import { Component, SimpleChanges, ViewEncapsulation,
-  OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+  OnInit, OnChanges, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { select as hSelect, selectAll as hSelectAll } from 'hast-util-select';
@@ -27,6 +27,7 @@ export class WorldmapComponent implements OnInit, OnChanges {
 
   constructor(
     private sanitizer: DomSanitizer,
+    private elementRef: ElementRef
   ) { 
   }
 
@@ -74,9 +75,13 @@ export class WorldmapComponent implements OnInit, OnChanges {
           console.log("event data: ");
           console.log(event);
           console.log("viewbox data: " + JSON.stringify(this.viewBoxCoords));
-          let xdiff = event.clientX - this.viewBoxCoords[0]
+          let elt = this.elementRef.nativeElement.children[0]
+          let midWidth = elt.offsetWidth / 2;
+          let midHeight = elt.offsetHeight / 2;
+          let xdiff = event.clientX - midWidth;
+          let ydiff = event.clientY - midHeight;
           let dir_x = Math.sign(xdiff);
-          let dir_y = Math.sign(event.clientY - this.viewBoxCoords[1]);
+          let dir_y = Math.sign(ydiff);
           this.viewBoxCoords[0] += dir_x * Math.abs(event.deltaY) * this.ratio;
           this.viewBoxCoords[1] += dir_y * Math.abs(event.deltaY);
           this.viewBoxCoords[2] += event.deltaY * this.ratio;
