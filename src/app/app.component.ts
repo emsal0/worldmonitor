@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { WorldmapComponent } from './worldmap/worldmap.component';
-import { NewspanelComponent } from './newspanel/newspanel.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 
@@ -14,7 +12,7 @@ export class AppComponent {
 
   svg:SafeHtml;
   parser:any;
-  country_cursor: string = 'UNIMPLEMENTED';
+  country_data: {id: string, title: string} = {'id': 'xx', 'title': 'none'};
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -31,6 +29,6 @@ export class AppComponent {
   }
   
   onCountryInfo(event: {id: string, title: string}) {
-    this.country_cursor = event.title;
+    this.country_data = event;
   }
 }

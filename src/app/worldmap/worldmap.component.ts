@@ -34,7 +34,7 @@ export class WorldmapComponent implements OnInit, OnChanges {
   ngOnInit() {}
 
   countryEvent(event: any) {
-    console.log(event);
+    //console.log(event);
     this.broadcastCountryInfo.emit(event);
   }
 
@@ -51,7 +51,6 @@ export class WorldmapComponent implements OnInit, OnChanges {
       svgHast
     );
 
-    console.log(countryData);
     svgHast.children = [oceanData];
     this.countries = countryData;
     this.svg = this.sanitizer.bypassSecurityTrustHtml(toHtml(svgHast));

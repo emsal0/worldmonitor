@@ -20,7 +20,9 @@ describe('NewsService', () => {
   });
 
   it('should output something', () => {
-      let f = service.getArticles('https://www.cbc.ca/cmlink/rss-canada'); 
+      let f = service
+          .getArticles('http://localhost:8000/' +
+                       'feed?n=https://rss.cbc.ca/lineup/canada.xml'); 
       f.then(() => {});
   });
 });

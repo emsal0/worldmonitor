@@ -1,3 +1,8 @@
 <div id="worldmap-news-panel">
-    <h3>Headlines for: {{country_cursor}}</h3>
+    <h3>Headlines for: {{country_data.title}}</h3>
+    <ul>
+        <li *ngFor="let a of this.articles">
+            <a href="{{a.link}}">{{a.title}}</a>
+        </li>
+    </ul>
 </div>
