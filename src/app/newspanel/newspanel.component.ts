@@ -20,6 +20,25 @@ export class NewspanelComponent implements OnInit, OnChanges {
   ngOnInit(): void {
   }
 
+  interleaveFeed(arts: Array<{title: string, link: string, content: string}>) {
+      let idx = 0;
+      while (idx < this.articles.length) {
+          idx += this.feedCounter;
+          let nextArticle = arts.shift();
+          if (nextArticle !== undefined) { 
+              this.articles.splice(idx, 0, nextArticle);
+          }
+          idx += 1;
+      }
+      while (arts.length > 0) {
+          let nextArticle = arts.shift();
+          if (nextArticle !== undefined) { 
+              this.articles.push(nextArticle);
+          }
+      }
+      this.feedCounter += 1;
+  }
+
   ngOnChanges(changes: SimpleChanges): void { 
       console.log(changes);
       let country_change = changes['country_data'].currentValue as
@@ -36,26 +55,7 @@ export class NewspanelComponent implements OnInit, OnChanges {
             let news_observable = this.newsService.
                 getArticles(feedUrl);
             this.rssRequestSubscriptions.push(news_observable.subscribe(
-                arts => {
-                    console.log(arts);
-                    //this.articles = arts;
-                    let idx = 0;
-                    while (idx < this.articles.length) {
-                        idx += this.feedCounter;
-                        let nextArticle = arts.shift();
-                        if (nextArticle !== undefined) { 
-                            this.articles.splice(idx, 0, nextArticle);
-                        }
-                        idx += 1;
-                    }
-                    while (arts.length > 0) {
-                        let nextArticle = arts.shift();
-                        if (nextArticle !== undefined) { 
-                            this.articles.push(nextArticle);
-                        }
-                    }
-                    this.feedCounter += 1;
-                }));
+                arts => this.interleaveFeed(arts))); 
         }
       }
   }
