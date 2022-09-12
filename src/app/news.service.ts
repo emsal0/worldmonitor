@@ -12,6 +12,7 @@ export class NewsService {
   getArticles(feed: string): Observable<Array<{title: string,
                                                 link: string,
                                                 content:string}>> {
+    console.log(feed);
     let news_observable = this.http.get('http://localhost:8000/feed?n=' + feed);
     return news_observable.pipe(
         map(x => x as Array<{title: string, link: string, content: string}>));

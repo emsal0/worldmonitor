@@ -13,6 +13,7 @@ export class AppComponent {
   svg:SafeHtml;
   parser:any;
   country_data: {id: string, title: string} = {'id': 'xx', 'title': 'none'};
+  rss_list = {};
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -22,10 +23,16 @@ export class AppComponent {
   }
 
   ngOnInit(): void {
+    this.httpClient.get('assets/news_list.json')
+      .subscribe(value => {
+          this.rss_list = value;
+      });
+
     this.httpClient.get('assets/worldmap.svg', { responseType : 'text' })
       .subscribe(value => {
         this.svg = this.sanitizer.bypassSecurityTrustHtml(value);
       });
+
   }
   
   onCountryInfo(event: {id: string, title: string}) {

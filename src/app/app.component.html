@@ -1,5 +1,5 @@
 <h2 id="worldmap-title"> World Map </h2>
 <div id="main-container">
   <app-worldmap [svg]="svg" (broadcastCountryInfo)="onCountryInfo($event)"></app-worldmap>
-  <app-newspanel [country_data]="country_data"></app-newspanel>
+  <app-newspanel [country_data]="country_data" [rss_list]="rss_list"></app-newspanel>
 </div>

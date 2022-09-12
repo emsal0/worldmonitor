@@ -9,6 +9,7 @@ import { NewsService } from '../news.service';
 export class NewspanelComponent implements OnInit, OnChanges {
 
   @Input() country_data: any = {'title': 'unselected', 'id': 'xx'};
+  @Input() rss_list: { [id: string]: string } = {};
   articles: Array<{title: string, link: string, content: string}> = [];
 
   constructor(private newsService: NewsService) { }
@@ -17,10 +18,15 @@ export class NewspanelComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void { 
+      console.log(changes);
+      let country_change = changes['country_data'].currentValue as
+        {id: string, title: string};
       if(changes['country_data'].currentValue.id != 'xx') {
-        let newId = changes['country_data'].currentValue.id;
+        this.articles = [];
+        let newId = country_change.id;
+        console.log("newId: "+ newId);
         let news_observable = this.newsService.
-            getArticles('https://rss.cbc.ca/lineup/canada.xml');
+            getArticles(this.rss_list[newId][0]);
         news_observable.subscribe(arts => {
             console.log(arts);
             this.articles = arts;
