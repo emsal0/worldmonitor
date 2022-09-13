@@ -17,9 +17,17 @@ JSON.json(art::Article) = function(article)
                    ))
 end
 
+function get_first_nonempty(elt::XMLElement)
+    filtered = filter(collect(child_nodes(elt))) do child
+        strip(get_text(child)) != ""
+    end
+    filtered[1]
+end
+
 function get_text(text_node::XMLNode)
     if is_cdatanode(text_node)
-        ret = match(r"<!\[CDATA\[(.*)\]\]>", string(text_node))[1]
+        @show text_node
+        ret = match(r"<\!\[CDATA\[(.*)\]\]>", string(text_node))[1]
     elseif is_textnode(text_node)
         ret = string(text_node)
     end
@@ -30,17 +38,17 @@ end
 
 function process_article(article::XMLElement)
     title_elt = find_element(article, "title")
-    title_text = collect(child_nodes(title_elt))[1]
+    title_text = get_first_nonempty(title_elt)
     title = get_text(title_text)
 
     link_elt = find_element(article, "link")
-    link_text = collect(child_nodes(link_elt))[1]
+    link_text = get_first_nonempty(link_elt)
     link = get_text(link_text)
 
     description = "ASDF"
 
     # description_elt = find_element(article, "description")
-    # desc_child = collect(child_nodes(description_elt))
+    # desc_child = collect(child_nodes(description_elt))[1]
 
     # if length(desc_child) == 0
     #     description = "ASDF"
