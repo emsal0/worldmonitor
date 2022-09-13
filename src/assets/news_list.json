@@ -54,7 +54,7 @@
     "cx": [],
     "cy": [],
     "cz": [],
-    "de": ["https://feeds.thelocal.com/rss/de"],
+    "de": ["https://feeds.thelocal.com/rss/de", "https://rss.dw.com/rdf/rss-en-ger"],
     "dj": [],
     "dk": ["https://feeds.thelocal.com/rss/dk"],
     "dm": [],

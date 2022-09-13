@@ -70,6 +70,9 @@ function get_articles(url::String)
 
     channel_elt = find_element(rss_root_elt, "channel")
     item_elts = get_elements_by_tagname(channel_elt, "item")
+    if length(item_elts) == 0
+        item_elts = get_elements_by_tagname(rss_root_elt, "item")
+    end
     return item_elts
 end
 
