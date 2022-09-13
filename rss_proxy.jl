@@ -26,8 +26,11 @@ end
 
 function get_text(text_node::XMLNode)
     if is_cdatanode(text_node)
-        @show text_node
-        ret = match(r"<\!\[CDATA\[(.*)\]\]>", string(text_node))[1]
+        try
+            ret = match(r"<!\[CDATA\[(.*)\]\]>", string(text_node))[1]
+        catch err
+            ret = "<<NO TITLE>>"
+        end
     elseif is_textnode(text_node)
         ret = string(text_node)
     end
