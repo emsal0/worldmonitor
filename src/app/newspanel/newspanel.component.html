@@ -2,7 +2,8 @@
     <h3>Headlines for: {{country_data.title}}</h3>
     <ul id='article-list'>
         <li class='article-link' *ngFor="let a of this.articles">
-            <img src="{{getFaviconUrl(a.link)}}" width="32" height="32" />
+            <img src="{{getFaviconUrl(a.link)}}" width="32" height="32" 
+                                    alt="[ {{getBaseUrl(a.link)[1][0]}} ]"/>
             <a href="{{a.link}}">{{a.title}}</a>
         </li>
     </ul>
