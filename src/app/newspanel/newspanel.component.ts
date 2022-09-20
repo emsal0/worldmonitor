@@ -20,6 +20,23 @@ export class NewspanelComponent implements OnInit, OnChanges {
   ngOnInit(): void {
   }
 
+  getBaseUrl(link: string) {
+      const re = /https:\/\/(.(?!\/))*./;
+      let matches = link.match(re);
+      if (matches === null) {
+        return '';
+      } else {
+        return matches[0];
+      }
+  }
+
+  getFaviconUrl(link: string) {
+      let baseUrl = this.getBaseUrl(link);
+      console.log(baseUrl);
+
+      return baseUrl + '/favicon.ico';
+  }
+
   interleaveFeed(arts: Array<{title: string, link: string, content: string}>) {
       let idx = 0;
       while (idx < this.articles.length) {
