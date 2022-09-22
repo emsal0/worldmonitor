@@ -21,27 +21,22 @@ export class NewspanelComponent implements OnInit, OnChanges {
   }
 
   getBaseUrl(link: string) {
-      const re = /https:\/\/.*\.((.(?!\/))+)\.\w+\//;
-      const re2 = /https:\/\/.*\.?((.(?!\/))+)\.\w+\//;
-      let to_try = [re, re2];
-      for (let r_exp of to_try) {
-          let matches = link.match(r_exp);
-          if (matches !== null) {
-            console.log(matches);
-            return [matches[0], matches[1]];
-          }
-      }
-      return ['', '?'];
+    let url = new URL(link);
+    return url.hostname;
   }
 
 
   getFaviconUrl(link: string) {
-      let baseUrl = this.getBaseUrl(link)[0];
+      let baseUrl = this.getBaseUrl(link);
+      let subdomains = baseUrl.split('.');
+      if (subdomains[0] != 'www') {
+        baseUrl = subdomains.slice(subdomains.length - 2).join('.');
+      }
       if (baseUrl === '') {
         return 'ERR'
       }
 
-      return baseUrl + 'favicon.ico';
+      return 'https://' + baseUrl + '/favicon.ico';
   }
 
   interleaveFeed(arts: Array<{title: string, link: string, content: string}>) {

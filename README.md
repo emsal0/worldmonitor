@@ -2,26 +2,6 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.1.
 
-## Development server
+# Disclaimer
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+The selection of newspapers for each country, as well as how the world map is drawn, currently only reflects the personal preferences of myself as the primary author of the code, and is not meant to be a prescriptive statement about how world events should be viewed. This applies to both the underlying perspectives behindthe newspapers, the languages of coverage, as well as perhaps other factors that I'm not even aware of. Furthermore, as much as this application's static content reflects my biases, it also represents my blind spots; there are certain selections that may be a certain way just because I haven't informed myself about the situation in the relevant area of the world. If you think this is the case then please do not hesitate to raise an issue in the repository, and if you think your disagreements with my preferences are untenable, please feel welcome to fork the code and use it as per the conditions set in the license (GPLv3).
