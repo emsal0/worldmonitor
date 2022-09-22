@@ -28,10 +28,6 @@ export class NewspanelComponent implements OnInit, OnChanges {
 
   getFaviconUrl(link: string) {
       let baseUrl = this.getBaseUrl(link);
-      let subdomains = baseUrl.split('.');
-      if (subdomains[0] != 'www') {
-        baseUrl = subdomains.slice(subdomains.length - 2).join('.');
-      }
       if (baseUrl === '') {
         return 'ERR'
       }

@@ -107,7 +107,7 @@
     "in": ["https://www.hindustantimes.com/feeds/rss/india-news/rssfeed.xml", "https://www.thehindu.com/news/national/feeder/default.rss"],
     "io": [],
     "iq": [],
-    "ir": ["http://iranwire.com/en/feed/"],
+    "ir": ["http://iranwire.com/en/feed/", "http://www.guardian.co.uk/world/iran/rss"],
     "is": [],
     "it": [],
     "je": [],
