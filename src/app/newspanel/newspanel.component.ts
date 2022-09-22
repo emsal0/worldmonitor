@@ -25,6 +25,15 @@ export class NewspanelComponent implements OnInit, OnChanges {
     return url.hostname;
   }
 
+  getFirstLetter(link: string) {
+    let baseUrl = this.getBaseUrl(link);
+    let subdomains = baseUrl.split('.');
+    if (subdomains.length <= 2) {
+      return '?';
+    }
+    return subdomains[subdomains.length - 2][0];
+  }
+
 
   getFaviconUrl(link: string) {
       let baseUrl = this.getBaseUrl(link);
