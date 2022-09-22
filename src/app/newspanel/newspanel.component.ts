@@ -28,7 +28,7 @@ export class NewspanelComponent implements OnInit, OnChanges {
   getFirstLetter(link: string) {
     let baseUrl = this.getBaseUrl(link);
     let subdomains = baseUrl.split('.');
-    if (subdomains.length <= 2) {
+    if (subdomains.length < 2) {
       return '?';
     }
     return subdomains[subdomains.length - 2][0];
