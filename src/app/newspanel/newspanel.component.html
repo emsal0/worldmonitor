@@ -1,5 +1,15 @@
 <div id="worldmap-news-panel">
     <h3>Headlines for: {{country_data.title}}</h3>
+    <button (click)="show = !show">{{ show ? 'Hide' : 'Show' }} Sources</button>
+    <ng-container *ngIf='show'>
+      <ul id='sources-list'>
+        <li class='rss-source' *ngFor='let url of feedUrls'>
+          {{url}}
+        </li>
+      </ul>
+    </ng-container>
+
+    <h4>Articles</h4>
     <ul id='article-list'>
         <li class='article-link' *ngFor="let a of this.articles">
             <img src="{{getFaviconUrl(a.link)}}" width="32" height="32" 

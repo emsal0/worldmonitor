@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { NewsService } from '../news.service';
 import { Observable, Subscription } from 'rxjs';
+import { CountryData } from '../country-data';
 
 @Component({
   selector: 'app-newspanel',
@@ -9,11 +10,14 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class NewspanelComponent implements OnInit, OnChanges {
 
-  @Input() country_data: any = {'title': 'unselected', 'id': 'xx'};
-  @Input() rss_list: { [id: string]: string } = {};
+  @Input() country_data: CountryData = {'title': 'unselected', 'id': 'xx'};
+  @Input() rss_list: { [id: string]: string[] } = {};
   articles: Array<{title: string, link: string, content: string}> = [];
   feedCounter: number = 0;
   rssRequestSubscriptions: Array<Subscription> = [];
+
+  show: boolean = false;
+  feedUrls: string[] = [];
 
   constructor(private newsService: NewsService) { }
 
@@ -75,6 +79,7 @@ export class NewspanelComponent implements OnInit, OnChanges {
         this.articles = [];
         let newId = country_change.id;
         console.log("newId: "+ newId);
+        this.feedUrls = this.rss_list[newId];
         for (let feedUrl of this.rss_list[newId]) {
             let news_observable = this.newsService.
                 getArticles(feedUrl);

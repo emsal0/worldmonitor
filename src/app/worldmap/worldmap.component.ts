@@ -1,6 +1,7 @@
 import { Component, SimpleChanges, ViewEncapsulation,
   OnInit, OnChanges, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { CountryData } from '../country-data'
 
 import { select as hSelect, selectAll as hSelectAll } from 'hast-util-select';
 import { HtmlParser } from '@starptech/webparser';
@@ -17,7 +18,7 @@ const fromWebparser = require('@starptech/hast-util-from-webparser');
 export class WorldmapComponent implements OnInit, OnChanges {
 
   @Input() svg: SafeHtml = '';
-  @Output() broadcastCountryInfo = new EventEmitter<{id: string, title: string}>;
+  @Output() broadcastCountryInfo = new EventEmitter<CountryData>;
   country_cursor: string = '';
   countries: Array<any> = [];
   parser: HtmlParser = new HtmlParser({});

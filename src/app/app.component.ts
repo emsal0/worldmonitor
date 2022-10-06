@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
+import { CountryData } from './country-data';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,7 @@ export class AppComponent {
 
   svg:SafeHtml;
   parser:any;
-  country_data: {id: string, title: string} = {'id': 'xx', 'title': 'none'};
+  country_data: CountryData = {'id': 'xx', 'title': 'none'};
   rss_list = {};
 
   constructor(
