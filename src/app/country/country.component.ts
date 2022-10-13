@@ -2,6 +2,7 @@ import { Component, Input, OnInit,
   OnChanges, SimpleChanges } from '@angular/core';
 import { Output, EventEmitter } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { CountryData } from '../country-data';
 
 import { matches as hMatches, select as hSelect,
   selectAll as hSelectAll } from 'hast-util-select';
@@ -19,7 +20,7 @@ export class CountryComponent implements OnInit {
   @Input() countryEltJson: any;
 
   innerSvg: SafeHtml = '';
-  @Output() broadcastId = new EventEmitter<{id: string, title: string}>;
+  @Output() broadcastId = new EventEmitter<CountryData>;
 
   constructor(
     private sanitizer: DomSanitizer,

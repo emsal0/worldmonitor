@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { NewsService } from '../news.service';
 import { Observable, Subscription } from 'rxjs';
 import { CountryData } from '../country-data';
@@ -10,10 +11,11 @@ interface Article {
   content: string;
 };
 
+
 @Component({
   selector: 'app-newspanel',
   templateUrl: './newspanel.component.html',
-  styleUrls: ['./newspanel.component.less']
+  styleUrls: ['./newspanel.component.less'],
 })
 export class NewspanelComponent implements OnInit, OnChanges {
 
@@ -26,12 +28,18 @@ export class NewspanelComponent implements OnInit, OnChanges {
   show: boolean = false;
   feedUrls: string[] = [];
   rssRequestSubscriptions: { [url: string]: Subscription } = {};
-  numSourceInputs: number = 0;
+
+  addSourceCounter: number = 0;
+  addSourceInputs: Array<{ id: number, id_string: string }> = [];
+
+  addSourceControl: FormControl = new FormControl('');
+  parseInt(x: any) { return parseInt(x); }
 
   constructor(private newsService: NewsService) { }
 
   resetUI() {
-    this.numSourceInputs = 0;
+    this.addSourceCounter = 0;
+    this.addSourceInputs = [];
   }
 
   ngOnInit(): void {
@@ -52,12 +60,25 @@ export class NewspanelComponent implements OnInit, OnChanges {
   }
 
   addSourceInput() {
-    this.numSourceInputs += 1;
+    this.addSourceCounter += 1;
+    let elt_data = { id: this.addSourceCounter,
+      id_string: 'add-source-'+this.addSourceCounter};
+    this.addSourceInputs.push(elt_data);
   }
 
-  addSource() {
-
+  addSource(event: { id: string, feedUrl: string }) {
+    let id_string = event.id;
+    let feedUrl = event.feedUrl;
+    this.addSourceObservable(feedUrl);
+    this.removeSourceInput(id_string);
   }
+
+  removeSourceInput(event: any) {
+    let add_source_id = event;
+    this.addSourceInputs = this.addSourceInputs.filter(
+      x => x.id_string != add_source_id);
+  }
+
   removeSource(url: string) {
     this.rssRequestSubscriptions[url].unsubscribe();
     this.articles = this.articles.filter(art => art.feedSource != url);
@@ -71,6 +92,13 @@ export class NewspanelComponent implements OnInit, OnChanges {
     }
 
     return 'https://' + baseUrl + '/favicon.ico';
+  }
+
+  addSourceObservable(feedUrl: string) {
+    let news_observable = this.newsService.
+      getArticles(feedUrl);
+    this.rssRequestSubscriptions[feedUrl] = news_observable.subscribe(
+      arts => this.interleaveFeed(feedUrl, arts)); 
   }
 
   constructArticle(feedUrl: string,
@@ -121,10 +149,7 @@ export class NewspanelComponent implements OnInit, OnChanges {
       console.log("newId: "+ newId);
       this.feedUrls = this.rss_list[newId];
       for (let feedUrl of this.rss_list[newId]) {
-        let news_observable = this.newsService.
-          getArticles(feedUrl);
-        this.rssRequestSubscriptions[feedUrl] = news_observable.subscribe(
-          arts => this.interleaveFeed(feedUrl, arts)); 
+        this.addSourceObservable(feedUrl);
       }
     }
   }

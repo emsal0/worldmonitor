@@ -6,16 +6,20 @@ import { AppComponent } from './app.component';
 import { WorldmapComponent } from './worldmap/worldmap.component';
 import { CountryComponent } from './country/country.component';
 import { NewspanelComponent } from './newspanel/newspanel.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AddSourceInputComponent } from './newspanel/add-source-input/add-source-input.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     WorldmapComponent,
     CountryComponent,
-    NewspanelComponent
+    NewspanelComponent,
+    AddSourceInputComponent,
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     HttpClientModule
   ],
   providers: [],

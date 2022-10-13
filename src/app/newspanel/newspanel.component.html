@@ -1,17 +1,21 @@
 <div id='worldmap-news-panel'>
     <h3>Headlines for: {{country_data.title}}</h3>
-    <button (click)='show = !show'>{{ show ? 'Hide' : 'Show' }} Sources</button>
-    <ng-container *ngIf='show'>
-      <ul id='sources-list'>
-        <li class='rss-source' *ngFor='let item of rssRequestSubscriptions | keyvalue'>
-          {{item.key}}
-          <button class='remove-source-button' (click)='removeSource(item.key)'>Remove</button>
-        </li>
-      </ul>
-      <button id='add-source' (click)='addSourceInput()'>Add</button>
-      <ng-container *ngFor='let item of [].constructor(numSourceInputs)'>
-        <input class='source-input'/>
-      </ng-container>
+    <ng-container *ngIf='country_data.id != "xx"'>
+        <button (click)='show = !show'>{{ show ? 'Hide' : 'Show' }} Sources</button>
+        <ng-container *ngIf='show'>
+          <ul id='sources-list'>
+            <li class='rss-source' *ngFor='let item of rssRequestSubscriptions | keyvalue'>
+              {{item.key}}
+              <button class='remove-source-button' (click)='removeSource(item.key)'>Remove</button>
+            </li>
+          </ul>
+          <button id='add-source' (click)='addSourceInput()'>Add</button>
+          <newspanel-add-source-input *ngFor='let elt_data of addSourceInputs'
+              [id]='elt_data.id'
+              [id_string]='elt_data.id_string'
+              (addSource)='addSource($event)'
+              (removeSource)='removeSourceInput($event)'></newspanel-add-source-input>
+        </ng-container>
     </ng-container>
 
     <h4>Articles</h4>
