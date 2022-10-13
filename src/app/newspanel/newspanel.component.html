@@ -1,20 +1,25 @@
-<div id="worldmap-news-panel">
+<div id='worldmap-news-panel'>
     <h3>Headlines for: {{country_data.title}}</h3>
-    <button (click)="show = !show">{{ show ? 'Hide' : 'Show' }} Sources</button>
+    <button (click)='show = !show'>{{ show ? 'Hide' : 'Show' }} Sources</button>
     <ng-container *ngIf='show'>
       <ul id='sources-list'>
-        <li class='rss-source' *ngFor='let url of feedUrls'>
-          {{url}}
+        <li class='rss-source' *ngFor='let item of rssRequestSubscriptions | keyvalue'>
+          {{item.key}}
+          <button class='remove-source-button' (click)='removeSource(item.key)'>Remove</button>
         </li>
       </ul>
+      <button id='add-source' (click)='addSourceInput()'>Add</button>
+      <ng-container *ngFor='let item of [].constructor(numSourceInputs)'>
+        <input class='source-input'/>
+      </ng-container>
     </ng-container>
 
     <h4>Articles</h4>
     <ul id='article-list'>
-        <li class='article-link' *ngFor="let a of this.articles">
-            <img src="{{getFaviconUrl(a.link)}}" width="32" height="32" 
-                                    alt="[ {{getFirstLetter(a.link)}} ]"/>
-            <a href="{{a.link}}">{{a.title}}</a>
+        <li class='article-link' *ngFor='let a of this.articles'>
+            <img src='{{getFaviconUrl(a.link)}}' width='32' height='32' 
+                                    alt='[ {{getFirstLetter(a.link)}} ]'/>
+            <a href='{{a.link}}'>{{a.title}}</a>
         </li>
     </ul>
 </div>
