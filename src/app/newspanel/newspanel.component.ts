@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NewsService } from '../news.service';
+import { FeedListService } from '../feed-list.service';
 import { Observable, Subscription } from 'rxjs';
 import { CountryData } from '../country-data';
 
@@ -34,7 +35,10 @@ export class NewspanelComponent implements OnInit, OnChanges {
   addSourceControl: FormControl = new FormControl('');
   parseInt(x: any) { return parseInt(x); }
 
-  constructor(private newsService: NewsService) { }
+  updateFeedsSubscription: Subscription = new Subscription();
+
+  constructor(private newsService: NewsService,
+              private feedListService: FeedListService) { }
 
   resetUI() {
     this.addSourceCounter = 0;
@@ -70,6 +74,7 @@ export class NewspanelComponent implements OnInit, OnChanges {
     let feedUrl = event.feedUrl;
     this.addSourceObservable(feedUrl);
     this.removeSourceInput(id_string);
+    this.updateFeeds();
   }
 
   removeSourceInput(event: any) {
@@ -79,9 +84,20 @@ export class NewspanelComponent implements OnInit, OnChanges {
   }
 
   removeSource(url: string) {
+    this.feedUrls = this.feedUrls.filter( s => s != url );
     this.rssRequestSubscriptions[url].unsubscribe();
     this.articles = this.articles.filter(art => art.feedSource != url);
     delete this.rssRequestSubscriptions[url];
+    this.updateFeeds();
+  }
+
+  updateFeeds() {
+    this.updateFeedsSubscription.unsubscribe();
+    if (this.country_data.id != 'xx') {
+      this.updateFeedsSubscription = this.feedListService.updateFeeds(
+        this.country_data.id,
+        this.feedUrls).subscribe();
+    }
   }
 
   getFaviconUrl(link: string) {
@@ -112,7 +128,8 @@ export class NewspanelComponent implements OnInit, OnChanges {
     return nextArticle;
   }
 
-  interleaveFeed(feedUrl: string, arts: Array<{title: string, link: string, content: string}>) {
+  interleaveFeed(feedUrl: string, arts: Array<{title: string, link: string, 
+                 content: string}>) {
     let idx = 0;
     let n = this.articles.length;
     while (idx < n) {
@@ -135,8 +152,7 @@ export class NewspanelComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void { 
     console.log(changes);
-    let country_change = changes['country_data'].currentValue as
-    {id: string, title: string};
+    let country_change = changes['country_data'].currentValue as CountryData;
     if(changes['country_data'].currentValue.id != 'xx') {
       this.resetUI();
       for (let sub of Object.values(this.rssRequestSubscriptions)) {
@@ -146,10 +162,13 @@ export class NewspanelComponent implements OnInit, OnChanges {
       this.articles = [];
       let newId = country_change.id;
       console.log("newId: "+ newId);
-      this.feedUrls = this.rss_list[newId];
-      for (let feedUrl of this.rss_list[newId]) {
-        this.addSourceObservable(feedUrl);
-      }
+      this.feedListService.getFeeds(newId).subscribe(
+        feedList => {
+          this.feedUrls = feedList;
+          for (let feedUrl of feedList) {
+            this.addSourceObservable(feedUrl);
+          }
+        });
     }
   }
 }
