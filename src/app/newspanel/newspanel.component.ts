@@ -26,7 +26,6 @@ export class NewspanelComponent implements OnInit, OnChanges {
   articles: Array<Article> = [];
 
   show: boolean = false;
-  feedUrls: string[] = [];
   rssRequestSubscriptions: { [url: string]: Subscription } = {};
 
   addSourceCounter: number = 0;
@@ -69,7 +68,7 @@ export class NewspanelComponent implements OnInit, OnChanges {
     this.addSourceInputs.push(elt_data);
   }
 
-  addSource(event: { id: string, feedUrl: string }) {
+  addSourceFromInput(event: { id: string, feedUrl: string }) {
     let id_string = event.id;
     let feedUrl = event.feedUrl;
     this.addSourceObservable(feedUrl);
@@ -84,8 +83,8 @@ export class NewspanelComponent implements OnInit, OnChanges {
   }
 
   removeSource(url: string) {
-    this.feedUrls = this.feedUrls.filter( s => s != url );
     this.rssRequestSubscriptions[url].unsubscribe();
+    delete this.rssRequestSubscriptions[url];
     this.articles = this.articles.filter(art => art.feedSource != url);
     delete this.rssRequestSubscriptions[url];
     this.updateFeeds();
@@ -104,7 +103,7 @@ export class NewspanelComponent implements OnInit, OnChanges {
     if (this.country_data.id != 'xx') {
       this.updateFeedsSubscription = this.feedListService.updateFeeds(
         this.country_data.id,
-        this.feedUrls).subscribe();
+        Object.keys(this.rssRequestSubscriptions)).subscribe();
     }
   }
 
@@ -167,7 +166,6 @@ export class NewspanelComponent implements OnInit, OnChanges {
     console.log("getting feeds from service: "+ country_id);
     this.feedListService.getFeeds(country_id).subscribe(
       feedList => {
-        this.feedUrls = feedList;
         for (let feedUrl of feedList) {
           this.addSourceObservable(feedUrl);
         }

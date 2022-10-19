@@ -64,6 +64,7 @@ function process_article(article::XMLElement)
 end
 
 function get_articles(url::String)
+    @show url
     r = HTTP.get(url)
     rss_xml = String(r.body)
     rss_root_elt = parse_string(rss_xml) |> root 
