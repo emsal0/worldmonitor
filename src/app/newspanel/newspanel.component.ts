@@ -91,6 +91,14 @@ export class NewspanelComponent implements OnInit, OnChanges {
     this.updateFeeds();
   }
 
+  restoreDefaultSources() {
+    let removeObsv = this.feedListService.
+      removeLocalStorageSources(this.country_data.id);
+    removeObsv.subscribe(() => {
+      this.getFeedsFromService(this.country_data.id);
+    });
+  }
+
   updateFeeds() {
     this.updateFeedsSubscription.unsubscribe();
     if (this.country_data.id != 'xx') {
@@ -150,25 +158,29 @@ export class NewspanelComponent implements OnInit, OnChanges {
     }
   }
 
+  getFeedsFromService(country_id: string) {
+    for (let sub of Object.values(this.rssRequestSubscriptions)) {
+      sub.unsubscribe();
+    }
+    this.rssRequestSubscriptions = {};
+    this.articles = [];
+    console.log("getting feeds from service: "+ country_id);
+    this.feedListService.getFeeds(country_id).subscribe(
+      feedList => {
+        this.feedUrls = feedList;
+        for (let feedUrl of feedList) {
+          this.addSourceObservable(feedUrl);
+        }
+      });
+  }
+
   ngOnChanges(changes: SimpleChanges): void { 
     console.log(changes);
     let country_change = changes['country_data'].currentValue as CountryData;
     if(changes['country_data'].currentValue.id != 'xx') {
       this.resetUI();
-      for (let sub of Object.values(this.rssRequestSubscriptions)) {
-        sub.unsubscribe();
-      }
-      this.rssRequestSubscriptions = {};
-      this.articles = [];
       let newId = country_change.id;
-      console.log("newId: "+ newId);
-      this.feedListService.getFeeds(newId).subscribe(
-        feedList => {
-          this.feedUrls = feedList;
-          for (let feedUrl of feedList) {
-            this.addSourceObservable(feedUrl);
-          }
-        });
+      this.getFeedsFromService(newId);
     }
   }
 }

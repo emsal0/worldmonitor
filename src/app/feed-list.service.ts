@@ -50,7 +50,25 @@ export class FeedListService {
       obj[country_id] = feeds;
       localStorage['feeds'] = JSON.stringify(obj);
       subscriber.next(feeds);
+      subscriber.complete();
     });
   }
 
+  removeLocalStorageSources(country_id: string) {
+    return new Observable((subscriber) => {
+      let obj: { [id: string]: string[] } = {};
+      if (Object.keys(localStorage).includes('feeds')) {
+        try {
+          obj = JSON.parse(localStorage['feeds']);
+        } catch(err) { }
+        delete obj[country_id];
+        localStorage['feeds'] = JSON.stringify(obj);
+        subscriber.next(true);
+        subscriber.complete();
+      } else {
+        subscriber.next(true);
+        subscriber.complete();
+      }
+    });
+  }
 }
