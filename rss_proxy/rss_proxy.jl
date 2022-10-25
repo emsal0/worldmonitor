@@ -65,7 +65,7 @@ end
 
 function get_articles(url::String)
     @show url
-    r = HTTP.get(url)
+    r = HTTP.get(url, headers=["Content-Type" => "application/rss+xml"])
     rss_xml = String(r.body)
     rss_root_elt = parse_string(rss_xml) |> root 
 
