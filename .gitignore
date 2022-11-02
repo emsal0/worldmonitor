@@ -38,6 +38,8 @@ testem.log
 /typings
 scratchpad
 
+rss_proxy/target
+
 # System files
 .DS_Store
 Thumbs.db
