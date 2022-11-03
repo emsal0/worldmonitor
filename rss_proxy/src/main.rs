@@ -42,14 +42,14 @@ async fn request_feed(url: &String) -> Result<Vec<Article>, String> {
         .unwrap()
         .text()
         .await.unwrap();
-    println!("{}", feed_res);
     let maybe_xml_tree = Document::parse_with_options(feed_res.as_str(), ParsingOptions { allow_dtd: true, } );
     match maybe_xml_tree {
         Ok(xml_tree) => {
             Ok(parse_articles(&xml_tree))
         },
         Err(err) => {
-            Err(format!("URL {}: XML parse error: {}", url, err.to_string()).to_string())
+            println!("URL {}: XML parse error: {}", url, err.to_string());
+            Err("".to_string())
         }
     }
 }
