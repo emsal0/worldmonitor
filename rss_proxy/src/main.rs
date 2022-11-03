@@ -1,8 +1,8 @@
 use actix_cors::Cors;
 use actix_web::{get, web, App, HttpServer, Responder};
 use serde::{Serialize, Deserialize};
-use roxmltree::Document;
-use reqwest::Result;
+use roxmltree::{Document, ParsingOptions};
+use std::result::Result;
 
 #[derive(Serialize)]
 struct Article {
@@ -23,22 +23,35 @@ fn parse_articles(doc: &roxmltree::Document) -> Vec<Article> {
         let link = node.descendants()
             .find(|n| n.has_tag_name("link")).unwrap().descendants()
             .find(|n| n.is_text()).unwrap().text();
-        let desc: Option<String> = Some("no desc".to_string());
+        let desc: Option<String> = None;
         Article {
-            title: title.unwrap().to_string(),
-            link: link.unwrap().to_string(),
-            content: desc.unwrap().to_string(),
+            title: title.expect("no title text").to_string(),
+            link: link.expect("no link text").to_string(),
+            content: desc.unwrap_or("no desc".to_string()),
         }
     }).collect()
 }
 
-async fn request_feed(url: &String) -> Result<Vec<Article>> {
-    let feed_res = reqwest::get(url)
-        .await?
+async fn request_feed(url: &String) -> Result<Vec<Article>, String> {
+    let req_client = reqwest::Client::new();
+    let feed_res = req_client.get(url)
+        .header("Content-Type", "application/rss+xml")
+        .fetch_mode_no_cors()
+        .send()
+        .await
+        .unwrap()
         .text()
-        .await?;
-    let xml_tree = Document::parse(feed_res.as_str()).unwrap();
-    Ok(parse_articles(&xml_tree))
+        .await.unwrap();
+    println!("{}", feed_res);
+    let maybe_xml_tree = Document::parse_with_options(feed_res.as_str(), ParsingOptions { allow_dtd: true, } );
+    match maybe_xml_tree {
+        Ok(xml_tree) => {
+            Ok(parse_articles(&xml_tree))
+        },
+        Err(err) => {
+            Err(format!("URL {}: XML parse error: {}", url, err.to_string()).to_string())
+        }
+    }
 }
 
 #[derive(Deserialize)]
@@ -49,11 +62,10 @@ struct FeedQuery {
 #[get("/feed")]
 async fn get_feed(query: web::Query<FeedQuery>) -> impl Responder {
     let article_list = request_feed(&query.n).await;
-    let res = match article_list {
-        Ok(list) => list,
-        Err(_) => Vec::new(),
-    };
-    web::Json(res)
+    match article_list {
+        Ok(list) => web::Json(list),
+        Err(_) => web::Json(Vec::new()),
+    }
 }
 
 #[actix_web::main]
