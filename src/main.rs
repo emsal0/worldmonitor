@@ -1,8 +1,11 @@
 use actix_cors::Cors;
 use actix_web::{get, web, App, HttpServer, Responder};
+use actix_web_static_files::ResourceFiles;
 use serde::{Serialize, Deserialize};
 use roxmltree::{Document, ParsingOptions};
 use std::result::Result;
+
+include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
 #[derive(Serialize)]
 struct Article {
@@ -71,12 +74,15 @@ async fn get_feed(query: web::Query<FeedQuery>) -> impl Responder {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
+
+        let generated = generate();
         let cors = Cors::permissive();
 
         App::new()
             .wrap(cors)
-            .route("/hello", web::get().to(|| async { "Hello World!" }))
             .service(get_feed)
+            .service(ResourceFiles::new("/", generated))
+            .route("/hello", web::get().to(|| async { "Hello World!" }))
     })
     .bind(("127.0.0.1", 8080))?
     .run()

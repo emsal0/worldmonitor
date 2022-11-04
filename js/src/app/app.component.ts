@@ -15,6 +15,7 @@ export class AppComponent {
   parser:any;
   country_data: CountryData = {'id': 'xx', 'title': 'none'};
   rss_list = {};
+  dummy: string = "asdf";
 
   constructor(
     private sanitizer: DomSanitizer,
