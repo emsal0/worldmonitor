@@ -12,6 +12,7 @@ struct Article {
     title: String,
     link: String,
     content: String,
+    pub_date: String,
 }
 
 fn parse_articles(doc: &roxmltree::Document) -> Vec<Article> {
@@ -27,10 +28,15 @@ fn parse_articles(doc: &roxmltree::Document) -> Vec<Article> {
             .find(|n| n.has_tag_name("link")).unwrap().descendants()
             .find(|n| n.is_text()).unwrap().text();
         let desc: Option<String> = None;
+        let pub_date = node.descendants()
+            .find(|n| n.has_tag_name("pubDate")).unwrap().descendants()
+            .find(|n| n.is_text()).unwrap().text();
+
         Article {
             title: title.expect("no title text").to_string(),
             link: link.expect("no link text").to_string(),
             content: desc.unwrap_or("no desc".to_string()),
+            pub_date: pub_date.expect("no link text").to_string(),
         }
     }).collect()
 }

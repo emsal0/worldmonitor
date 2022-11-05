@@ -3,14 +3,9 @@ import { FormControl } from '@angular/forms';
 import { NewsService } from '../news.service';
 import { FeedListService } from '../feed-list.service';
 import { Observable, Subscription } from 'rxjs';
-import { CountryData } from '../country-data';
 
-interface Article {
-  feedSource: string;
-  title: string;
-  link: string;
-  content: string;
-};
+import { Article } from '../article';
+import { CountryData } from '../country-data';
 
 
 @Component({
@@ -125,33 +120,34 @@ export class NewspanelComponent implements OnInit, OnChanges {
   }
 
   constructArticle(feedUrl: string,
-                   art: {title: string, link: string, content: string}) {
+                   art: Article) {
     let nextArticle: Article = {
       feedSource: feedUrl,
       title: art.title,
       link: art.link,
-      content: art.content
+      content: art.content,
+      pubDate: art.pubDate,
     };
     return nextArticle;
   }
 
-  interleaveFeed(feedUrl: string, arts: Array<{title: string, link: string, 
-                 content: string}>) {
+  interleaveFeed(feedUrl: string, arts: Array<Article>) {
+
     let idx = 0;
     let n = this.articles.length;
     while (idx < n) {
       idx += Object.keys(this.rssRequestSubscriptions).length - 1;
-      let nextArticleIncomplete = arts.shift();
-      if (nextArticleIncomplete !== undefined) { 
-        let nextArticle = this.constructArticle(feedUrl, nextArticleIncomplete);
+      let nextArticlePartial = arts.shift();
+      if (nextArticlePartial !== undefined) {
+        let nextArticle = this.constructArticle(feedUrl, nextArticlePartial);
         this.articles.splice(idx, 0, nextArticle);
       }
       idx += 1;
     }
     while (arts.length > 0) {
-      let nextArticleIncomplete = arts.shift();
-      if (nextArticleIncomplete !== undefined) { 
-        let nextArticle = this.constructArticle(feedUrl, nextArticleIncomplete);
+      let nextArticlePartial = arts.shift();
+      if (nextArticlePartial !== undefined) {
+        let nextArticle = this.constructArticle(feedUrl, nextArticlePartial);
         this.articles.push(nextArticle);
       }
     }

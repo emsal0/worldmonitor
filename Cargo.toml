@@ -1,5 +1,5 @@
 [package]
-name = "rss_proxy"
+name = "worldmonitor"
 version = "0.1.0"
 edition = "2021"
 
