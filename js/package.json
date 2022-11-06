@@ -22,7 +22,6 @@
     "@starptech/hast-util-from-webparser": "^0.10.0",
     "@starptech/webparser": "^0.10.0",
     "@types/svg-parser": "^2.0.3",
-    "angular": "^1.6.10",
     "fs-web": "^1.0.1",
     "hast-util-select": "^5.0.2",
     "hast-util-to-html": "^8.0.3",
