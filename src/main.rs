@@ -12,7 +12,7 @@ struct Article {
     title: String,
     link: String,
     content: String,
-    pub_date: String,
+    pubDate: String,
 }
 
 fn parse_articles(doc: &roxmltree::Document) -> Vec<Article> {
@@ -36,7 +36,7 @@ fn parse_articles(doc: &roxmltree::Document) -> Vec<Article> {
             title: title.expect("no title text").to_string(),
             link: link.expect("no link text").to_string(),
             content: desc.unwrap_or("no desc".to_string()),
-            pub_date: pub_date.expect("no link text").to_string(),
+            pubDate: pub_date.expect("no link text").to_string(),
         }
     }).collect()
 }

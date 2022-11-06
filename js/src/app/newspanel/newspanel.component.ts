@@ -133,23 +133,14 @@ export class NewspanelComponent implements OnInit, OnChanges {
 
   interleaveFeed(feedUrl: string, arts: Array<Article>) {
 
-    let idx = 0;
-    let n = this.articles.length;
-    while (idx < n) {
-      idx += Object.keys(this.rssRequestSubscriptions).length - 1;
-      let nextArticlePartial = arts.shift();
-      if (nextArticlePartial !== undefined) {
-        let nextArticle = this.constructArticle(feedUrl, nextArticlePartial);
-        this.articles.splice(idx, 0, nextArticle);
+    for (let article of arts) {
+      let idx = 0;
+      while (article.pubDate < (this.articles.at(idx) || article).pubDate 
+             && idx < this.articles.length) {
+        idx += 1;
       }
-      idx += 1;
-    }
-    while (arts.length > 0) {
-      let nextArticlePartial = arts.shift();
-      if (nextArticlePartial !== undefined) {
-        let nextArticle = this.constructArticle(feedUrl, nextArticlePartial);
-        this.articles.push(nextArticle);
-      }
+      let articleWhole = this.constructArticle(feedUrl, article);
+      this.articles.splice(idx, 0, articleWhole);
     }
   }
 

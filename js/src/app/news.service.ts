@@ -15,6 +15,10 @@ export class NewsService {
     let news_observable = this.http.get('http://localhost:8080/feed?n=' +
                                         encodeURIComponent(feed));
     return news_observable.pipe(
-        map(x => x as Array<Article>));
+        map(x => (x as Array<Article>).map( (i:Article) => {
+          let y = i;
+          y.pubDate = new Date(i['pubDate']);
+          return y;
+        })));
   }
 }
