@@ -7,6 +7,7 @@ use std::result::Result;
 
 include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
+#[allow(non_snake_case)]
 #[derive(Serialize)]
 struct Article {
     title: String,
@@ -32,6 +33,7 @@ fn parse_articles(doc: &roxmltree::Document) -> Vec<Article> {
             .find(|n| n.has_tag_name("pubDate")).unwrap().descendants()
             .find(|n| n.is_text()).unwrap().text();
 
+        #[allow(non_snake_case)]
         Article {
             title: title.expect("no title text").to_string(),
             link: link.expect("no link text").to_string(),
