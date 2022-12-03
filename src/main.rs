@@ -47,19 +47,26 @@ async fn request_feed(url: &String) -> Result<Vec<Article>, String> {
     let req_client = reqwest::Client::new();
     let feed_res = req_client.get(url)
         .header("Content-Type", "application/rss+xml")
+        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
+        .header("User-Agent", "worldmonitor/1.0")
         .fetch_mode_no_cors()
         .send()
         .await
         .unwrap()
         .text()
         .await.unwrap();
+    let res_clone = feed_res.clone();
+    //let split = res_clone.as_str().split("\n");
+    //let split_vec: Vec<&str> = split.collect();
     let maybe_xml_tree = Document::parse_with_options(feed_res.as_str(), ParsingOptions { allow_dtd: true, } );
     match maybe_xml_tree {
         Ok(xml_tree) => {
             Ok(parse_articles(&xml_tree))
         },
         Err(err) => {
-            println!("URL {}: XML parse error: {}", url, err.to_string());
+            //let rowpos = err.pos().row - 1;
+            println!("URL {}: XML parse error: {}; row text: {}", url, err.to_string(),
+                res_clone);
             Err("".to_string())
         }
     }
