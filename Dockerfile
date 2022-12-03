@@ -37,5 +37,6 @@ WORKDIR /worldmonitor
 ENV CARGO_NET_GIT_FETCH_WITH_CLI true
 ENV RUST_BACKTRACE full
 RUN cargo build
+EXPOSE 8080
 # RUN cargo +nightly build -Z no-index-update
-ENTRYPOINT cargo run
+CMD ["cargo", "run"]
