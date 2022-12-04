@@ -16,29 +16,44 @@ struct Article {
     pubDate: String,
 }
 
+fn get_field<'a>(node: &'a roxmltree::Node,
+             field_name: &'static str) -> Option<&'a str> {
+    let find_tag_res = node.descendants()
+        .find(|n| n.has_tag_name(field_name));
+
+    match find_tag_res {
+        Some(tag_node) => {
+            let find_text_res = tag_node.descendants().find(|n| n.is_text());
+            match find_text_res {
+                Some(n) => Some(n.text().unwrap_or("")),
+                None => Some("")
+            }
+        },
+        None => None
+    }
+}
+
 fn parse_articles(doc: &roxmltree::Document) -> Vec<Article> {
     let root_node = doc.root();
     let item_nodes: Vec<roxmltree::Node> = root_node.descendants().filter(
         |node| node.has_tag_name("item")).collect();
 
     item_nodes.iter().map(|node| {
-        let title = node.descendants()
-            .find(|n| n.has_tag_name("title")).unwrap().descendants()
-            .find(|n| n.is_text()).unwrap().text();
-        let link = node.descendants()
-            .find(|n| n.has_tag_name("link")).unwrap().descendants()
-            .find(|n| n.is_text()).unwrap().text();
-        let desc: Option<String> = None;
-        let pub_date = node.descendants()
-            .find(|n| n.has_tag_name("pubDate")).unwrap().descendants()
-            .find(|n| n.is_text()).unwrap().text();
+        let title = get_field(&node, "title");
+        let link = get_field(&node, "link");
+        let desc: Option<&str> = None;
+        let pub_date = match get_field(&node, "pubDate") {
+            None =>
+                get_field(&node, "dc:date"),
+            Some(s) => Some(s)
+        };
 
         #[allow(non_snake_case)]
         Article {
-            title: title.expect("no title text").to_string(),
-            link: link.expect("no link text").to_string(),
-            content: desc.unwrap_or("no desc".to_string()),
-            pubDate: pub_date.expect("no link text").to_string(),
+            title: title.unwrap_or("no title").to_string(),
+            link: link.unwrap_or("no link text").to_string(),
+            content: desc.unwrap_or("no desc").to_string(),
+            pubDate: pub_date.unwrap_or("no link text").to_string(),
         }
     }).collect()
 }
