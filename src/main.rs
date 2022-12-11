@@ -4,6 +4,7 @@ use actix_web_static_files::ResourceFiles;
 use serde::{Serialize, Deserialize};
 use roxmltree::{Document, ParsingOptions};
 use std::result::Result;
+use std::env;
 
 include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
@@ -103,8 +104,16 @@ async fn get_feed(query: web::Query<FeedQuery>) -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
+    let args: Vec<String> = env::args().collect();
+    let port: u16 = match args.len() {
+        2 => match &args[1].parse() {
+            Ok(n) => *n,
+            _ => 8080
+        },
+        _ => 8080
+    };
 
+    HttpServer::new(|| {
         let generated = generate();
         let cors = Cors::permissive();
 
@@ -114,7 +123,7 @@ async fn main() -> std::io::Result<()> {
             .service(ResourceFiles::new("/", generated))
             .route("/hello", web::get().to(|| async { "Hello World!" }))
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("127.0.0.1", port))?
     .run()
     .await
 }
