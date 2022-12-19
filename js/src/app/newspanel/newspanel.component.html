@@ -1,30 +1,30 @@
 <div id='worldmap-news-panel'>
-    <h3>Headlines for: {{country_data.title}}</h3>
-    <ng-container *ngIf='country_data.id != "xx"'>
-        <button (click)='show = !show'>{{ show ? 'Hide' : 'Show' }} Sources</button>
-        <ng-container *ngIf='show'>
-          <ul id='sources-list'>
-            <li class='rss-source' *ngFor='let item of rssRequestSubscriptions | keyvalue'>
-              {{item.key}}
-              <button class='remove-source-button' (click)='removeSource(item.key)'>Remove</button>
-            </li>
-          </ul>
-          <button id='add-source' (click)='addSourceInput()'>Add</button>
-          <newspanel-add-source-input *ngFor='let elt_data of addSourceInputs'
-              [id]='elt_data.id'
-              [id_string]='elt_data.id_string'
-              (addSource)='addSourceFromInput($event)'
-              (removeSource)='removeSourceInput($event)'></newspanel-add-source-input>
-          <button id='sources-restore-default' (click)='restoreDefaultSources()'>Restore Defaults</button>
-        </ng-container>
+  <h3>Headlines for: {{country_data.title}}</h3>
+  <ng-container *ngIf='country_data.id != "xx"'>
+    <button (click)='show = !show'>{{ show ? 'Hide' : 'Show' }} Sources</button>
+    <ng-container *ngIf='show'>
+      <ul id='sources-list'>
+      <li class='rss-source' *ngFor='let item of rssRequestSubscriptions | keyvalue'>
+        {{item.key}}
+        <button class='remove-source-button' (click)='removeSource(item.key)'>Remove</button>
+      </li>
+      </ul>
+      <button id='add-source' (click)='addSourceInput()'>Add</button>
+      <newspanel-add-source-input *ngFor='let elt_data of addSourceInputs'
+        [id]='elt_data.id'
+        [id_string]='elt_data.id_string'
+        (addSource)='addSourceFromInput($event)'
+        (removeSource)='removeSourceInput($event)'></newspanel-add-source-input>
+      <button id='sources-restore-default' (click)='restoreDefaultSources()'>Restore Defaults</button>
     </ng-container>
+  </ng-container>
 
-    <h4>Articles</h4>
-    <ul id='article-list'>
-        <li class='article-link' *ngFor='let a of this.articles'>
-            <img src='{{getFaviconUrl(a.link)}}' width='32' height='32' 
-                                    alt='[ {{getFirstLetter(a.link)}} ]'/>
-            <a href='{{a.link}}'>{{a.title}}</a>
-        </li>
-    </ul>
+  <h4>Articles</h4>
+  <ul id='article-list'>
+    <li class='article-link' *ngFor='let a of this.articles'>
+      <img src='{{getFaviconUrl(a.link)}}' width='32' height='32'
+                  alt='[ {{getFirstLetter(a.link)}} ]'/>
+      [{{a.pubDate | date:'short'}}] <a href='{{a.link}}'>{{a.title}}</a>
+    </li>
+  </ul>
 </div>
